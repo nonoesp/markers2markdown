@@ -19,6 +19,10 @@ If you `Name` and `Description` fields contain commas and double quotes, replace
 
 	node index.js
 
+### Instant parse
+
+	bash loop.sh
+
 ### License
 
 Released under the [MIT](https://github.com/nonoesp/markers2markdown/blob/master/LICENSE) license.
