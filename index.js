@@ -1,9 +1,13 @@
 const fs = require('fs');
 const parse = require('csv-parse');
 
-fs.readFile('markers.csv', 'utf8', function(err, data) {
+// Path to your input CSV file
+const inputPath = 'data/markers.csv';
+// Path to your output Markdown notes file
+const outputPath = 'data/notes.md';
+
+fs.readFile(inputPath, 'utf8', function(err, data) {
     if (err) throw err;
-    //console.log(data);
     parse(data, {}, (err, parsed) => {
         let notes = [];
         for (let i = 1; i < parsed.length; i++) {
@@ -18,11 +22,10 @@ fs.readFile('markers.csv', 'utf8', function(err, data) {
                 .split('(opening-quote)').join('"');
             notes.push(text);
         }
-        let output = notes.join('\n');
+        let outputText = notes.join('\n');
 
-        fs.writeFile('notes.md', output, function(err) {
+        fs.writeFile(outputPath, outputText, function(err) {
             if (err) throw err;
-            console.log('Replaced!');
         });
     });
 });
