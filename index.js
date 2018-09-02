@@ -4,7 +4,7 @@ const parse = require('csv-parse');
 // Path to your input CSV file
 const inputPath = 'data/markers.csv';
 // Path to your output Markdown notes file
-const outputPath = 'data/notes.md';
+const outputPath = 'bin/notes.md';
 
 fs.readFile(inputPath, 'utf8', function(err, data) {
     if (err) throw err;
