@@ -18,3 +18,11 @@ If you `Name` and `Description` fields contain commas and double quotes, replace
 ### Parse your markers to Markdown
 
 	node index.js
+
+### License
+
+Released under the [MIT](https://github.com/nonoesp/markers2markdown/blob/master/LICENSE) license.
+
+### Nono Martínez Alonso
+
+I host [The Getting Simple Podcast](http://gettingsimple.com/podcast). You can find me at [Nono.ma](http://nono.ma/about) and [@nonoesp](http://twitter.com/nonoesp).
