@@ -10,7 +10,7 @@ const isSeparatedByTabs = true;
 // Set title to bold?
 const isTitleBold = false;
 // Sentence ends (that do not need an ending point)
-const sentenceEnds = ['"', '\'', '?', '!', '.', '>', ':'];
+const sentenceEnds = ['"', '\'', '?', '!', '.', '>', ':', '—'];
 
 fs.readFile(inputPath, 'utf8', function(err, data) {
     if (err) throw err;
