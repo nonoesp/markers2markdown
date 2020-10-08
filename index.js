@@ -5,6 +5,8 @@ const parse = require('csv-parse');
 const inputPath = 'data/markers.csv';
 // Path to your output Markdown notes file
 const outputPath = 'bin/notes.md';
+// Path to your output Markdown chapters file
+const chaptersOutputPath = 'bin/chapters.md';
 // Comes from Adobe Audition? (.i.e., CSV with \t separations)
 const isSeparatedByTabs = true;
 // Set title to bold?
@@ -23,12 +25,18 @@ fs.readFile(inputPath, 'utf8', function(err, data) {
     }
 
     parse(data, {}, (err, parsed) => {
+        
         let notes = [];
+        let chapters = [];
+
         for (let i = 1; i < parsed.length; i++) {
             let time = parsed[i][1].split('.')[0];
             let title = parsed[i][0];
-            title = title.split('(comma)').join(',')
-                .split('(open-quote)').join('"');
+            title = title
+                .split('(comma)').join(',')
+                .split('(open-quote)')
+                .join('"');
+            let chapterTitle = title;
             const titleLast = title.split('').reverse()[0];
 
             // Description
@@ -50,13 +58,24 @@ fs.readFile(inputPath, 'utf8', function(err, data) {
             if (isTitleBold && title != '') {
                 title = `**${title}**`;
             }
-            let text = `- ${title}${description} [${time}]`;
-            notes.push(text);
+
+            // Markdown Podcast notes
+            notes.push(`- ${title}${description} [${time}]`);
+
+            // Plain-text YouTube chapters
+            chapters.push(`${time} ${chapterTitle}`);
         }
-        let outputText = notes.join('\n');
+        
+        const outputText = notes.join('\n');
+        const chaptersOutputText = chapters.join('\n');
 
         fs.writeFile(outputPath, outputText, function(err) {
             if (err) throw err;
         });
+
+        fs.writeFile(chaptersOutputPath, chaptersOutputText, function(err) {
+            if (err) throw err;
+        });
+        
     });
 });
