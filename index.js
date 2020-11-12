@@ -41,6 +41,10 @@ fs.readFile(inputPath, 'utf8', function(err, data) {
 
             // Description
             let description = parsed[i][5];
+            // Remove description is same as title
+            if (description == title) {
+                description = '';
+            }
             description = description.split('(comma)').join(',')
                 .split('(open-quote)').join('"');
 
