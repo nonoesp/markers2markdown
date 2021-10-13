@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "csv-parse": "^4.6.3"
+    "csv-parse": "^4.6.3",
+    "yargs": "^17.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.5"
   }
 }
