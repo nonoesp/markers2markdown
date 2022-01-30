@@ -54,12 +54,12 @@ interface Marker {
 
 const chaptersFormatter = (markers: Marker[]) =>
     markers.map((marker: Marker) =>
-        `${marker.timestamp} ${marker.title}`
+        `${marker.timestamp} ${marker.title.replace(`&amp;`, `&`)}`
     );
 
 const outlineFormatter = (markers: Marker[]) =>
     markers.map((marker: Marker) =>
-        `- ${marker.title}. [${marker.timestamp}]`
+        `- ${marker.title.replace(`&amp;`, `&`)}. [${marker.timestamp}]`
         .split(`?.`).join(`?`)
         .split(`!.`).join(`!`)
         .split(`".`).join(`"`)
@@ -84,17 +84,17 @@ const exportMarkers = (markerList: Marker[][], paths: string[]) => {
 
         // Contents
         const chapters = chaptersFormatter(markers).join(`\n`);
-        const outline = outlineFormatter(markers).join(`\n`);
+        // const outline = outlineFormatter(markers).join(`\n`);
 
         // Save
         fs.writeFileSync(chaptersPath, chapters, `utf-8`);
-        fs.writeFileSync(outlinePath, outline, `utf-8`);
+        // fs.writeFileSync(outlinePath, outline, `utf-8`);
 
         console.log(`\n## ${path.basename(filePath).replace(`.txt`, ``)}\n`);
         console.log(`## Chapters\n`);
         console.log(chapters);
-        console.log(`\n## Outline\n`);
-        console.log(outline);
+        // console.log(`\n## Outline\n`);
+        // console.log(outline);
 
     });
 
