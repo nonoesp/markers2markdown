@@ -52,6 +52,18 @@ interface Marker {
     title: string;
 }
 
+const timestamp2Seconds = (time: string) => {
+    const parts: number[] = time.split(':').map(s => parseInt(s));
+    const units = [3600, 60, 1];
+    let seconds = 0;
+    while(parts.length > 0) {
+        const amount = parts.pop();
+        const unit = units.pop();
+        seconds += amount * unit;
+    }
+    return seconds;
+}
+
 const chaptersFormatter = (markers: Marker[]) =>
     markers.map((marker: Marker) =>
         `${marker.timestamp} ${marker.title.replace(`&amp;`, `&`)}`
@@ -65,6 +77,13 @@ const outlineFormatter = (markers: Marker[]) =>
         .split(`".`).join(`"`)
         .split(`'.`).join(`'`)
     )
+
+const linkedChaptersFormatter = (markers: Marker[]) =>
+markers.map((marker: Marker) =>
+    `- [${marker.timestamp} `+
+    `${marker.title.replace(`&amp;`, `&`)}]`+
+    `(https://youtu.be/VIDEO_ID?t=${timestamp2Seconds(marker.timestamp)})`
+);
 
 // const chapters = markers.join(`\n`);
 // fs.writeFileSync(`${filePath}${chaptersSuffix}`, chapters, `utf-8`);
@@ -84,6 +103,7 @@ const exportMarkers = (markerList: Marker[][], paths: string[]) => {
 
         // Contents
         const chapters = chaptersFormatter(markers).join(`\n`);
+        const chaptersLinked = linkedChaptersFormatter(markers).join(`\n`);
         // const outline = outlineFormatter(markers).join(`\n`);
 
         // Save
@@ -91,7 +111,12 @@ const exportMarkers = (markerList: Marker[][], paths: string[]) => {
         // fs.writeFileSync(outlinePath, outline, `utf-8`);
 
         console.log(`\n## ${path.basename(filePath).replace(`.txt`, ``)}\n`);
-        console.log(`## Chapters\n`);
+        console.log(`## Chapters - Linked`);
+        console.log(``);
+        console.log(chaptersLinked);
+        console.log(``);
+        console.log(`## Chapters`);
+        console.log(``);
         console.log(chapters);
         // console.log(`\n## Outline\n`);
         // console.log(outline);
