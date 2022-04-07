@@ -7,7 +7,13 @@ const argv = require('yargs')
                 type: 'string',
                 description: 'Path to Descript-exported file containing markers.',
                 default: null
-            })            
+            })
+            .option('video-id', {
+                alias: 'v',
+                type: 'string',
+                description: 'YouTube video ID.',
+                default: 'VIDEO_ID'
+            })
             .argv;
 
 const chaptersSuffix = `-chapters.txt`;
@@ -78,11 +84,18 @@ const outlineFormatter = (markers: Marker[]) =>
         .split(`'.`).join(`'`)
     )
 
-const linkedChaptersFormatter = (markers: Marker[]) =>
+const linkedChaptersFormatter = (markers: Marker[], videoId: string) =>
 markers.map((marker: Marker) =>
     `- [${marker.timestamp} `+
     `${marker.title.replace(`&amp;`, `&`)}]`+
-    `(https://youtu.be/VIDEO_ID?t=${timestamp2Seconds(marker.timestamp)})`
+    `(https://youtu.be/${videoId}?t=${timestamp2Seconds(marker.timestamp)})`
+);
+
+const plainLinkedChaptersFormatter = (markers: Marker[], videoId: string) =>
+markers.map((marker: Marker) =>
+    `- \`${marker.timestamp}\` `+
+    `${marker.title.replace(`&amp;`, `&`)}`+
+    ` → https://youtu.be/${videoId}?t=${timestamp2Seconds(marker.timestamp)}`
 );
 
 // const chapters = markers.join(`\n`);
@@ -91,7 +104,7 @@ markers.map((marker: Marker) =>
 // console.log(`\n## ${path.basename(filePath)}\n`);
 // console.log(chapters);
 
-const exportMarkers = (markerList: Marker[][], paths: string[]) => {
+const exportMarkers = (markerList: Marker[][], paths: string[], videoId: string) => {
 
     paths.forEach((filePath: string, index: number) => {
 
@@ -103,7 +116,8 @@ const exportMarkers = (markerList: Marker[][], paths: string[]) => {
 
         // Contents
         const chapters = chaptersFormatter(markers).join(`\n`);
-        const chaptersLinked = linkedChaptersFormatter(markers).join(`\n`);
+        const chaptersLinked = linkedChaptersFormatter(markers, videoId).join(`\n`);
+        const chaptersPlainLinked = plainLinkedChaptersFormatter(markers, videoId).join(`\n`);
         // const outline = outlineFormatter(markers).join(`\n`);
 
         // Save
@@ -111,6 +125,10 @@ const exportMarkers = (markerList: Marker[][], paths: string[]) => {
         // fs.writeFileSync(outlinePath, outline, `utf-8`);
 
         console.log(`\n## ${path.basename(filePath).replace(`.txt`, ``)}\n`);
+        console.log(`**Chapters**`);
+        console.log(``);
+        console.log(chaptersPlainLinked);
+        console.log(``);
         console.log(`## Chapters - Linked`);
         console.log(``);
         console.log(chaptersLinked);
@@ -126,6 +144,7 @@ const exportMarkers = (markerList: Marker[][], paths: string[]) => {
 }
 
 let paths = [];
+const videoId = argv['video-id'];
 if (argv.path) {
     paths.push(argv.path);
 } else {
@@ -134,4 +153,4 @@ if (argv.path) {
 
 const markers = paths.map((path: string) => descriptTextToMarkers(path));
 
-exportMarkers(markers, paths);
+exportMarkers(markers, paths, videoId);
