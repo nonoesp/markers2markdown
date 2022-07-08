@@ -63,8 +63,8 @@ const timestamp2Seconds = (time: string) => {
     const units = [3600, 60, 1];
     let seconds = 0;
     while(parts.length > 0) {
-        const amount = parts.pop();
-        const unit = units.pop();
+        const amount = parts.pop() ?? 0;
+        const unit = units.pop() ?? 0;
         seconds += amount * unit;
     }
     return seconds;
