@@ -35,18 +35,25 @@ const findFilesByExtensionInDir = (dir: string, extension: string) => {
 const descriptTextToMarkers = (filePath: string) => {
 
     const contents = fs.readFileSync(filePath, { encoding: 'utf-8' });
-    let markers = contents.split(`\n---\n`).map((marker: string) => {
+
+    let markers = contents.split(`\n---\n`);
+
+    if(markers.length == 1) {
+        markers = contents.split(`\n`);
+    }
+
+    markers = markers.map((marker: string) => {
         const parts = marker.split(`\n`);
         return parts[parts.length - 1]
-        .split(`[00:`).join(``)
-        .split(`[`).join(``)
-        .split(`]`).join(``)
+        .split(`[00:`).join(`[`)
         ;
     });
     markers.pop();
     markers = markers.map((marker: string) => {
         const parts = marker.split(` `);
-        let timestamp = parts.shift() as string;
+        let timestamp = (parts.shift() as string)
+        .split(`[`).join(``)
+        .split(`]`).join(``);
         if (timestamp.length == 2) {
             timestamp = `00:${timestamp}`
         }
