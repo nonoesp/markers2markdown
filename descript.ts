@@ -46,7 +46,10 @@ const descriptTextToMarkers = (filePath: string) => {
     markers.pop();
     markers = markers.map((marker: string) => {
         const parts = marker.split(` `);
-        const timestamp = parts.shift();
+        let timestamp = parts.shift() as string;
+        if (timestamp.length == 2) {
+            timestamp = `00:${timestamp}`
+        }
         const title = parts.join(` `);
         return { timestamp, title };
     })
@@ -112,7 +115,7 @@ const exportMarkers = (markerList: Marker[][], paths: string[], videoId: string)
 
         // Paths
         const chaptersPath = `${filePath}${chaptersSuffix}`;
-        const outlinePath = `${filePath}${outlineSuffix}`;
+        // const outlinePath = `${filePath}${outlineSuffix}`;
 
         // Contents
         const chapters = chaptersFormatter(markers).join(`\n`);
