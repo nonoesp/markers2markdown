@@ -95,6 +95,13 @@ const outlineFormatter = (markers: Marker[]) =>
     )
 
 const linkedChaptersFormatter = (markers: Marker[], videoId: string) =>
+markers.map((marker: Marker, index: number) =>
+    `[\`${marker.timestamp}\`]`+
+    `(https://youtu.be/${videoId}?t=${timestamp2Seconds(marker.timestamp)})`+
+    ` · ${marker.title.replace(`&amp;`, `&`)}${index < markers.length - 1 ? '\\' : ''}`
+);
+
+const linkedChaptersFormatterV2 = (markers: Marker[], videoId: string) =>
 markers.map((marker: Marker) =>
     `- [${marker.timestamp} `+
     `${marker.title.replace(`&amp;`, `&`)}]`+
