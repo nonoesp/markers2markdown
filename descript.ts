@@ -36,20 +36,15 @@ const descriptTextToMarkers = (filePath: string) => {
 
     const contents = fs.readFileSync(filePath, { encoding: 'utf-8' });
 
-    let markers = contents.split(`\n---\n`);
-
-    if(markers.length == 1) {
-        markers = contents.split(`\n`);
-    }
-
-    markers = markers.map((marker: string) => {
-        const parts = marker.split(`\n`);
-        return parts[parts.length - 1]
+    const markers = contents
+    .split('\n')
+    .filter((s: string) => s.substring(0, 2) == '##')
+    .map((marker: string) => {
+        return marker
         .split(`[00:`).join(`[`)
-        ;
-    });
-    markers.pop();
-    markers = markers.map((marker: string) => {
+        .split(`## [`).join(`[`)
+    })
+    .map((marker: string) => {
         const parts = marker.split(` `);
         let timestamp = (parts.shift() as string)
         .split(`[`).join(``)
@@ -82,7 +77,7 @@ const timestamp2Seconds = (time: string) => {
 
 const chaptersFormatter = (markers: Marker[]) =>
     markers.map((marker: Marker) =>
-        `${marker.timestamp} ${marker.title.replace(`&amp;`, `&`)}`
+        `${marker.timestamp} - ${marker.title.replace(`&amp;`, `&`)}`
     );
 
 const outlineFormatter = (markers: Marker[]) =>
